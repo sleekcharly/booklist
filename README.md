@@ -1,2 +1,2 @@
 # booklist
-A simple  create-react-app implement of an online booklist
+A simple  create-react-app implementation of an online booklist
