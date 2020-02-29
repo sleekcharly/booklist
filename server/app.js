@@ -6,7 +6,12 @@ const app = express();
 
 const cors = require('cors');
 
-mongoose.connect('mongodb+srv://charles:test123@gql-ninja-xkf9r.mongodb.net/test?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://charles:N6qGQfrglAYmKZUH@gql-ninja-xkf9r.mongodb.net/test?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+});
 mongoose.connection.once('open', () => {
     console.log('connected to mongodb Atlas');
 });
@@ -26,7 +31,22 @@ app.use("/graphql", graphqlHTTP({
     graphiql: true // use the graphiql tool
 }));
 
-app.listen(4000, () => {
-    console.log("Now listening for requests on port 4000");
+app.use(express.static('client/build'));
+
+
+if(process.env.NODE_ENV === 'production'){
+    const path = require('path');
+    app.get('/*', (req, res) => {
+        console.log('works');
+        res.sendFile(path, resolve(__dirname, '../client', 'build', 'index.html'));
+    })
+}
+
+// create application port on development
+const port = process.env.PORT || 3001;
+
+// listen for connection
+app.listen(port, ()=> {
+    console.log(`SERVER RUNNING ON PORT ${port}`);
 });
 
